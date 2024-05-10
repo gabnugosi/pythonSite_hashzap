@@ -22,19 +22,36 @@ def main(pagina):
         pagina.remove(titulo_pagina)
         pagina.remove(botao_iniciar)
         popup_solicitacao_informacoes.open = False
+        pagina.add(corpo_chat)
+        pagina.add(linha_mensagem)
+        texto_entrar_chat = ft.Text(f'{campo_nome_usuario.value} entrou no chat')
+        corpo_chat.controls.append(texto_entrar_chat)
         pagina.update()
 
     def iniciar_chat(evento):
-        print('Iniciar chat')
         pagina.dialog = popup_solicitacao_informacoes
         popup_solicitacao_informacoes.open = True
         pagina.update()
 
+    def enviar_mensagem(evento):       
+        texto_mensagem = campo_mensagem.value
+        nome_usuario = campo_nome_usuario.value
+        texto_chat = ft.Text(f'{nome_usuario}: {texto_mensagem}')
+        corpo_chat.controls.append(texto_chat)
+        campo_mensagem.value = ''
+        pagina.update()
+        
     # cria o elemento
     titulo_pagina = ft.Text('Hashzap')
     titulo_popup = ft.Text('Bem vindo ao Hashzap')
     campo_nome_usuario = ft.TextField(label='Escreva seu nome no chat')
-
+    corpo_chat = ft.Column()
+    campo_mensagem = ft.TextField(label='Digite sua mensagem') 
+    
+    botao_enviar_mensagem = ft.ElevatedButton('Enviar', on_click=enviar_mensagem)
+    
+    linha_mensagem=ft.Row([campo_mensagem,botao_enviar_mensagem])
+    
     botao_entrar_chat = ft.ElevatedButton('Entrar no chat', on_click=entrar_chat)
     popup_solicitacao_informacoes = ft.AlertDialog(title=titulo_popup,content=campo_nome_usuario,actions=[botao_entrar_chat])
     botao_iniciar = ft.ElevatedButton("Iniciar chat", on_click=iniciar_chat)
