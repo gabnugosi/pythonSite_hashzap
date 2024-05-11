@@ -24,8 +24,8 @@ def main(pagina):
         popup_solicitacao_informacoes.open = False
         pagina.add(corpo_chat)
         pagina.add(linha_mensagem)
-        texto_entrar_chat = ft.Text(f'{campo_nome_usuario.value} entrou no chat')
-        corpo_chat.controls.append(texto_entrar_chat)
+        mensagem = f'{campo_nome_usuario.value} entrou no chat'
+        pagina.pubsub.send_all(mensagem)
         pagina.update()
 
     def iniciar_chat(evento):
@@ -36,11 +36,18 @@ def main(pagina):
     def enviar_mensagem(evento):       
         texto_mensagem = campo_mensagem.value
         nome_usuario = campo_nome_usuario.value
-        texto_chat = ft.Text(f'{nome_usuario}: {texto_mensagem}')
-        corpo_chat.controls.append(texto_chat)
+        mensagem = f'{nome_usuario}: {texto_mensagem}'
+        pagina.pubsub.send_all(mensagem)
         campo_mensagem.value = ''
         pagina.update()
-        
+
+    def enviar_mensagem_tunel(mensagem):
+        texto_chat = ft.Text(mensagem)
+        corpo_chat.controls.append(texto_chat)
+        pagina.update()
+
+    pagina.pubsub.subscribe(enviar_mensagem_tunel)
+
     # cria o elemento
     titulo_pagina = ft.Text('Hashzap')
     titulo_popup = ft.Text('Bem vindo ao Hashzap')
